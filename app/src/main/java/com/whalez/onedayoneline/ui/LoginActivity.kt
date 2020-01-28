@@ -17,7 +17,10 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.btn_register
 
 class LoginActivity : AppCompatActivity() {
-    private val TAG = "KKK"
+    private val TAG = "WHALEZ_LoginActivity"
+    private val EMAIL_FORMAT_ERROR = "The email address is badly formatted."
+//    private val NO_USER_ERROR = "There is no user record corresponding to this identifier. The user may have been deleted."
+//    private val PASSWORD_ERROR = "The password is invalid or the user does not have a password."
 
     private lateinit var auth: FirebaseAuth
 
@@ -30,17 +33,15 @@ class LoginActivity : AppCompatActivity() {
         btn_login.setOnClickListener {
             val userId = txt_id.text.toString()
             val userPassword = txt_password.text.toString()
-
             val userSessionManager = UserSessionManager(applicationContext)
-
+            val builder = AlertDialog.Builder(
+                ContextThemeWrapper(
+                    this@LoginActivity,
+                    R.style.Theme_AppCompat_Light_Dialog
+                )
+            )
             auth.signInWithEmailAndPassword(userId, userPassword)
                 .addOnCompleteListener { task ->
-                    val builder = AlertDialog.Builder(
-                        ContextThemeWrapper(
-                            this@LoginActivity,
-                            R.style.Theme_AppCompat_Light_Dialog
-                        )
-                    )
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         if (!user!!.isEmailVerified) {
@@ -60,14 +61,20 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(intent)
                             finish()
                         }
-                    } else {
-                        builder.setMessage("존재하지 않는 아이디입니다.")
-                            .setPositiveButton("확인") { _, _ ->
-                                txt_id.text.clear()
-                                txt_password.text.clear()
-                            }
-                            .show()
                     }
+                }.addOnFailureListener {
+                    val errorMessage = when (it.message) {
+                        EMAIL_FORMAT_ERROR ->
+                            "이메일 형식이 올바르지 않습니다."
+                        else ->
+                            "이메일 또는 비밀번호가 일치하지 않습니다."
+                    }
+                    builder.setMessage(errorMessage)
+                        .setPositiveButton("확인") { _, _ ->
+                            txt_id.text.clear()
+                            txt_password.text.clear()
+                        }
+                        .show()
                 }
         }
 
