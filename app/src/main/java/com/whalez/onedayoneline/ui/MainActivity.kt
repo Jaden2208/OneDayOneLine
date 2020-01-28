@@ -1,8 +1,10 @@
-package com.whalez.onedayoneline
+package com.whalez.onedayoneline.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.whalez.onedayoneline.data.DataSource
+import com.whalez.onedayoneline.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

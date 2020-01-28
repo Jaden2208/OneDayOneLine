@@ -1,4 +1,4 @@
-package com.whalez.onedayoneline
+package com.whalez.onedayoneline.data
 
 import com.whalez.onedayoneline.models.DiaryPost
 
