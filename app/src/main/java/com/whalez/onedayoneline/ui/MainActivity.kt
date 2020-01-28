@@ -3,6 +3,7 @@ package com.whalez.onedayoneline.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.indyproject2.UserSessionManager
 import com.whalez.onedayoneline.data.DataSource
 import com.whalez.onedayoneline.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,6 +15,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val userSessionManager = UserSessionManager(this)
+        userSessionManager.checkLogin()
 
         initRecyclerView()
         addDataSet()
