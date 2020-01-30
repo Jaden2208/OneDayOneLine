@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(
                 ContextThemeWrapper(
                     this@LoginActivity,
-                    R.style.Theme_AppCompat_Light_Dialog
+                    R.style.MyAlertDialogStyle
                 )
             )
             auth.signInWithEmailAndPassword(userId, userPassword)

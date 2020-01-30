@@ -48,6 +48,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
+    // Powermenu
+    implementation "com.github.skydoves:powermenu:2.1.2"
+
+    // Custom FloatingActionButton
+    implementation 'com.robertlevonyan.view:CustomFloatingActionButton:3.0.0'
+
 
     // Glide
 //    def glide_version = "4.8.0"

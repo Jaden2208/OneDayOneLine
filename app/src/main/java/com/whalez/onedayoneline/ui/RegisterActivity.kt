@@ -53,7 +53,7 @@ class RegisterActivity : AppCompatActivity() {
                                     val builder = AlertDialog.Builder(
                                         ContextThemeWrapper(
                                             this@RegisterActivity,
-                                            R.style.Theme_AppCompat_Light_Dialog
+                                            R.style.MyAlertDialogStyle
                                         )
                                     )
                                     builder.setMessage("본인 확인을 위한 이메일을\n[" + user.email + "] (으)로 보냈습니다.")
@@ -69,7 +69,7 @@ class RegisterActivity : AppCompatActivity() {
                     val builder = AlertDialog.Builder(
                         ContextThemeWrapper(
                             this@RegisterActivity,
-                            R.style.Theme_AppCompat_Light_Dialog
+                            R.style.MyAlertDialogStyle
                         )
                     )
                     when (it.message) {
