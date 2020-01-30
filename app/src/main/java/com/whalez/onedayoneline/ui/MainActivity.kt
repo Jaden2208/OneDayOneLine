@@ -1,5 +1,6 @@
 package com.whalez.onedayoneline.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -73,6 +74,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // (+) 버튼 클릭
+        btn_post.setOnClickListener {
+            val intent = Intent(this, PostActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Recyclerview ScrollListener
         rv_main.addOnScrollListener(object: MyRecyclerScroll() {
             override fun show() {
                 fab_subtitle.animate().translationY(0F).setInterpolator(DecelerateInterpolator(2F)).start()
