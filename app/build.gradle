@@ -47,6 +47,8 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-firestore:21.3.1'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
 
     // Powermenu
     implementation "com.github.skydoves:powermenu:2.1.2"
@@ -54,9 +56,10 @@ dependencies {
     // Custom FloatingActionButton
     implementation 'com.robertlevonyan.view:CustomFloatingActionButton:3.0.0'
 
+    // tedpermission
+    implementation "gun0912.ted:tedpermission:2.1.0"
 
     // Glide
-//    def glide_version = "4.8.0"
-//    implementation "com.github.bumptech.glide:glide:$glide_version"
-//    annotationProcessor "com.github.bumptech.glide:comiler:$glide_version"
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 }

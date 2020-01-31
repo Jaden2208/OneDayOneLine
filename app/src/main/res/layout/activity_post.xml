@@ -60,6 +60,30 @@
         android:padding="5dp">
 
         <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2020년 1월 17일 금요일"
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/btn_change_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="날짜 변경"
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_toEndOf="@+id/tv_date"
+            android:gravity="end"/>
+
+        <TextView
             android:id="@+id/tv_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +92,8 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:layout_below="@id/tv_date"/>
 
         <RelativeLayout
             android:id="@+id/rl_1"
@@ -121,9 +146,9 @@
             android:textColorHint="#000000"
             android:gravity="start"
             android:background="@drawable/rectangle_primary_dark"
-            android:layout_below="@+id/tv_2"
             android:layout_above="@+id/btn_post"
-            android:layout_marginBottom="20dp"/>
+            android:layout_below="@+id/tv_2"
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:id="@+id/btn_post"

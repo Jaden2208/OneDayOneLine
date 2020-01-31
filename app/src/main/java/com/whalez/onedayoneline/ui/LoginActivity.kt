@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
@@ -17,10 +18,11 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.btn_register
 
 class LoginActivity : AppCompatActivity() {
-    private val TAG = "WHALEZ_LoginActivity"
+    private val TAG = "kkk_LoginActivity"
     private val EMAIL_FORMAT_ERROR = "The email address is badly formatted."
-//    private val NO_USER_ERROR = "There is no user record corresponding to this identifier. The user may have been deleted."
-//    private val PASSWORD_ERROR = "The password is invalid or the user does not have a password."
+    private val NETWORK_ERROR = "An internal error has occurred. [ 7: ]"
+    private val NO_USER_ERROR = "There is no user record corresponding to this identifier. The user may have been deleted."
+    private val PASSWORD_ERROR = "The password is invalid or the user does not have a password."
 
     private lateinit var auth: FirebaseAuth
 
@@ -40,42 +42,63 @@ class LoginActivity : AppCompatActivity() {
                     R.style.MyAlertDialogStyle
                 )
             )
-            auth.signInWithEmailAndPassword(userId, userPassword)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val user = auth.currentUser
-                        if (!user!!.isEmailVerified) {
-                            builder.setMessage("아직 본인 확인이 되지 않았습니다. 이메일을 확인해주세요.")
+            when {
+                userId == "" -> {
+                    builder.setMessage("아이디를 입력해주세요.")
+                        .setPositiveButton("확인") { _, _ -> }
+                        .show()
+                }
+                userPassword == "" -> {
+                    builder.setMessage("비밀번호를 입력해주세요.")
+                        .setPositiveButton("확인") { _, _ -> }
+                        .show()
+                }
+                else -> {
+                    auth.signInWithEmailAndPassword(userId, userPassword)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val user = auth.currentUser
+                                if (!user!!.isEmailVerified) {
+                                    builder.setMessage("아직 본인 확인이 되지 않았습니다. 이메일을 확인해주세요.")
+                                        .setPositiveButton("확인") { _, _ ->
+                                            txt_password.text.clear()
+                                        }
+                                        .show()
+                                } else {
+                                    userSessionManager.createSession(userId)
+                                    Toast.makeText(
+                                        this@LoginActivity,
+                                        "로그인되었습니다.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            } else {
+                                Log.d(TAG, task.toString())
+                            }
+                        }.addOnFailureListener {
+                            Log.d(TAG, it.message)
+                            val errorMessage = when (it.message) {
+                                EMAIL_FORMAT_ERROR ->
+                                    "이메일 형식이 올바르지 않습니다."
+                                NETWORK_ERROR ->
+                                    "네트워크 연결상태가 올바르지 않습니다."
+                                PASSWORD_ERROR, NO_USER_ERROR ->
+                                    "이메일 또는 비밀번호가 일치하지 않습니다."
+                                else ->
+                                    "알 수 없는 오류가 발생했습니다! 관리자에게 문의주세요."
+                            }
+                            builder.setMessage(errorMessage)
                                 .setPositiveButton("확인") { _, _ ->
+                                    txt_id.text.clear()
                                     txt_password.text.clear()
                                 }
                                 .show()
-                        } else {
-                            userSessionManager.createSession(userId)
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "로그인되었습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            val intent = Intent(this, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
                         }
-                    }
-                }.addOnFailureListener {
-                    val errorMessage = when (it.message) {
-                        EMAIL_FORMAT_ERROR ->
-                            "이메일 형식이 올바르지 않습니다."
-                        else ->
-                            "이메일 또는 비밀번호가 일치하지 않습니다."
-                    }
-                    builder.setMessage(errorMessage)
-                        .setPositiveButton("확인") { _, _ ->
-                            txt_id.text.clear()
-                            txt_password.text.clear()
-                        }
-                        .show()
                 }
+            }
         }
 
         // 회원가입 버튼 클릭
