@@ -111,6 +111,7 @@
                 android:adjustViewBounds="true"/>
 
             <TextView
+                android:id="@+id/btn_load_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="사진 불러오기"

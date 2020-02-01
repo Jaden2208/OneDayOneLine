@@ -14,14 +14,13 @@ class UserSessionManager(private var context: Context) {
     private var PRIVATE_MODE = 0
 
     companion object {
-        private const val PREF_NAME = "LOGIN"
         private const val LOGIN = "IS_LOGIN"
         const val ID = "ID"
     }
 
     init {
         sharedPreferences =
-            context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+            context.getSharedPreferences(ID, PRIVATE_MODE)
         editor = sharedPreferences.edit()
         editor.apply()
     }
@@ -45,8 +44,7 @@ class UserSessionManager(private var context: Context) {
 
     val userDetail: HashMap<String, String?>
         get() {
-            val user =
-                HashMap<String, String?>()
+            val user = HashMap<String, String?>()
             user[ID] = sharedPreferences.getString(ID, null)
             return user
         }
