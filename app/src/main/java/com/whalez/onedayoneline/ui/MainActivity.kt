@@ -3,7 +3,6 @@ package com.whalez.onedayoneline.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
@@ -11,11 +10,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.indyproject2.UserSessionManager
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.skydoves.powermenu.kotlin.powerMenu
 import com.whalez.onedayoneline.R
-import com.whalez.onedayoneline.data.DataSource
+import com.whalez.onedayoneline.models.DiaryPost
 import com.whalez.onedayoneline.utils.MyRecyclerScroll
 import com.whalez.onedayoneline.utils.PowerMenuFactory
 import com.whalez.onedayoneline.utils.UserMenuFactory
@@ -26,7 +28,10 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = "kkk"
 
+    var db: FirebaseFirestore? = null
+    private lateinit var diaryRef: CollectionReference
     private lateinit var diaryAdapter: DiaryRvAdapter
+
     private val menu by powerMenu(PowerMenuFactory::class)
     private val userMenu by powerMenu(UserMenuFactory::class)
 
@@ -35,10 +40,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val userSessionManager = UserSessionManager(this)
+        val id = userSessionManager.userDetail["ID"]
+
+        db = FirebaseFirestore.getInstance()
+        diaryRef = db!!.collection("users/${id}/posts")
+
         userSessionManager.checkLogin()
 
         initRecyclerView()
-        addDataSet()
+//        addDataSet()
 //        toolbar.bringToFront()
 
         // 메뉴 버튼 클릭
@@ -95,16 +105,36 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun addDataSet() {
-        val data = DataSource.createDataSet()
-        diaryAdapter.submitList(data)
-    }
+//    private fun addDataSet() {
+//        val data = DataSource.createDataSet()
+//        diaryAdapter.submitList(data)
+//    }
 
     private fun initRecyclerView() {
+        Log.d(TAG, "initRecyclerView 진입")
+//        val query = diaryRef.orderBy("timestamp", Query.Direction.DESCENDING)
+//        val options = FirestoreRecyclerOptions.Builder<DiaryPost>()
+//            .setQuery(query, DiaryPost::class.java)
+//            .build()
+//        Log.d(TAG, "options 저장 완료")
         rv_main.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             diaryAdapter = DiaryRvAdapter()
             adapter = diaryAdapter
         }
+        Log.d(TAG, "initRecyclerView 종료")
+//            .hasFixedSize()
     }
+
+//    // 앱이 시작하면 변경된 데이터베이스에 대해서 어댑터에 반영하도록 한다.
+//    override fun onStart() {
+//        super.onStart()
+//        diaryAdapter.startListening()
+//    }
+//
+//    // 앱이 백그라운드로 들어가면 변경된 데이터베이스에 대해서 어댑터에 반영하지 않는다.
+//    override fun onStop() {
+//        super.onStop()
+//        diaryAdapter.stopListening()
+//    }
 }

@@ -47,6 +47,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
     private val MESSAGE = "message"
     private val IMAGE_URL = "image_url"
     private val DATE = "date"
+    private val TIME_STAMP = "timestamp"
 
     companion object {
         const val PICKER_TAG = "PrimeDatePickerBottomSheet"
@@ -120,6 +121,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                     dataToSave[MESSAGE] = postText
                     dataToSave[IMAGE_URL] = downloadUri.toString()
                     dataToSave[DATE] = tv_date.text.toString()
+                    dataToSave[TIME_STAMP] = pickedDay.timeInMillis.toString()
                     val mDocRef = FirebaseFirestore.getInstance()
                         .document("users/${id}/posts/${pickedDay.timeInMillis}")
                     mDocRef.set(dataToSave).addOnSuccessListener {
