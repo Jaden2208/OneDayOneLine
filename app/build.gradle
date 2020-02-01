@@ -44,19 +44,23 @@ dependencies {
     // RoundedImageView
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
-    // Firebase
+    // FireBase
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.firebase:firebase-firestore:21.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
 
-    // Powermenu
+    // PowerMenu
     implementation "com.github.skydoves:powermenu:2.1.2"
 
     // Custom FloatingActionButton
     implementation 'com.robertlevonyan.view:CustomFloatingActionButton:3.0.0'
 
-    // tedpermission
+    // PrimeCalendar
+    implementation 'com.aminography:primedatepicker:1.1.0'
+    implementation 'com.aminography:primecalendar:1.2.15'
+
+    // TedPermission
     implementation "gun0912.ted:tedpermission:2.1.0"
 
     // Glide
