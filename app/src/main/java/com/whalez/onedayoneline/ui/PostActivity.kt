@@ -2,13 +2,11 @@ package com.whalez.onedayoneline.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.aminography.primecalendar.PrimeCalendar
 import com.aminography.primecalendar.common.CalendarFactory
@@ -17,10 +15,14 @@ import com.aminography.primedatepicker.PickType
 import com.aminography.primedatepicker.fragment.PrimeDatePickerBottomSheet
 import com.bumptech.glide.Glide
 import com.example.indyproject2.UserSessionManager
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.whalez.onedayoneline.R
@@ -32,21 +34,25 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
 
     private val TAG = "kkk_PostActivity"
 
-//    var isStoragePermission = false
+    //    var isStoragePermission = false
     private var imageFile: File? = null
 
     private lateinit var pickedDay: PrimeCalendar
     private lateinit var photoUri: Uri
-    lateinit var year: String
-    lateinit var month: String
-    lateinit var day: String
-    lateinit var weekday: String
+    private lateinit var year: String
+    private lateinit var month: String
+    private lateinit var day: String
+    private lateinit var weekday: String
 
+    private val MESSAGE = "message"
+    private val IMAGE_URL = "image_url"
+    private val DATE = "date"
 
-    companion object{
+    companion object {
         const val PICKER_TAG = "PrimeDatePickerBottomSheet"
         const val PICK_FROM_ALBUM = 1
     }
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +64,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         var datePicker: PrimeDatePickerBottomSheet
         val today = CalendarFactory.newInstance(CalendarType.CIVIL)
         year = today.year.toString()
-        month = today.month.toString()
+        month = (today.month + 1).toString()
         day = today.month.toString()
         weekday = today.weekDayNameShort
         pickedDay = today
@@ -71,7 +77,6 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         btn_back.setOnClickListener { finish() }
 
         // 날짜 변경 버튼 클릭
-
         btn_change_date.setOnClickListener {
             val pickType = PickType.SINGLE
             datePicker = PrimeDatePickerBottomSheet.newInstance(
@@ -92,7 +97,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         // 올리기 버튼 클릭
         btn_post.setOnClickListener {
             val date = "" + year + '_' + month + '_' + day
-            val imageRef:StorageReference = FirebaseStorage.getInstance().reference
+            val imageRef: StorageReference = FirebaseStorage.getInstance().reference
                 .child("${id}/${date}.jpg")
             val uploadTask = imageRef.putFile(photoUri)
             uploadTask.addOnFailureListener {
@@ -101,13 +106,38 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                 Log.d(TAG, "파일 업로드 성공")
                 finish()
             }
-        }
 
+            val postText = txt_post.text.toString()
+            val dataToSave = mutableMapOf<String, Any>()
+            uploadTask.continueWithTask<Uri> { task ->
+                if (!task.isSuccessful) {
+                    throw task.exception!!
+                }
+                imageRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    dataToSave[MESSAGE] = postText
+                    dataToSave[IMAGE_URL] = downloadUri.toString()
+                    dataToSave[DATE] = tv_date.text.toString()
+                    val mDocRef = FirebaseFirestore.getInstance()
+                        .document("users/${id}/posts/${pickedDay.timeInMillis}")
+                    mDocRef.set(dataToSave).addOnSuccessListener {
+                        Log.d(TAG, "InspiringQuote : Document has been saved!")
+//                        mDocRef.collection("users/${id}").orderBy(TIME_STAMP, Query.Direction.DESCENDING)
+                    }.addOnFailureListener { e ->
+                        Log.d(TAG, "InspiringQuote : NO! - " + e.message)
+                    }
+                } else {
+                    Log.d(TAG, "task fail: " + task.exception)
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(data != null){
+        if (data != null) {
             photoUri = data.data!!
         }
         if (requestCode == PICK_FROM_ALBUM) {
@@ -139,7 +169,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         startActivityForResult(intent, PICK_FROM_ALBUM)
     }
 
-    private fun setImage(photoUri: Uri){
+    private fun setImage(photoUri: Uri) {
         Glide.with(this@PostActivity).load(photoUri).into(img_post)
         imageFile = null
     }
