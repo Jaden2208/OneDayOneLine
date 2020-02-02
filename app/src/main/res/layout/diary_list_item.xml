@@ -31,7 +31,8 @@
             android:text="너무너무 행복한 생일이었다. 부모님, 친구들 모두에게 감사한 하루..."
             android:textSize="20sp"
             android:textColor="#000"
-            android:fontFamily="@font/cafe24_oneprettynight"/>
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/post_date"
@@ -43,7 +44,8 @@
             android:text="2020.01.17 목"
             android:textSize="15sp"
             android:textColor="#000"
-            android:fontFamily="@font/cafe24_oneprettynight"/>
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:textStyle="bold"/>
 
     </RelativeLayout>
 

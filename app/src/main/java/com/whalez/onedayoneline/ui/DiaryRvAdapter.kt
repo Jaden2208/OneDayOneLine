@@ -2,6 +2,8 @@ package com.whalez.onedayoneline.ui
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.makeramen.roundedimageview.RoundedImageView
 import com.whalez.onedayoneline.R
 import com.whalez.onedayoneline.models.DiaryPost
@@ -76,7 +79,7 @@ class DiaryRvAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     init {
         Log.d("kkkAdapter", "init")
         firestore.collection("users/ryu2208@naver.com/posts")
-            .orderBy("timestamp").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            .orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { querySnapshot, _ ->
             items.clear()
             Log.d("kkkAdapter", "snapshot: " + querySnapshot!!.documents.size)
             for(snapshot in querySnapshot.documents){
@@ -121,13 +124,17 @@ class DiaryRvAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     ): RecyclerView.ViewHolder(itemView){
         private val contentText = itemView.content_text
         private val postDate = itemView.post_date
-        private val imgPost = itemView.cv_image!!
+        private val imgPost = itemView.cv_image
 
         fun bind(diaryPost: DiaryPost){
             Log.d("kkkAdapter", "bind")
-            contentText.text = diaryPost.content
+            Log.d("kkkAdapter", diaryPost.message.toString())
+            Log.d("kkkAdapter", diaryPost.date.toString())
+            Log.d("kkkAdapter", diaryPost.image_url.toString())
+            contentText.text = diaryPost.message
             postDate.text = diaryPost.date
-            Glide.with(itemView.context).load(diaryPost.imageUrl).into(imgPost)
+            Glide.with(itemView.context).load(diaryPost.image_url).into(imgPost)
+            imgPost.setColorFilter(Color.parseColor("#A0A0A0"), PorterDuff.Mode.SCREEN)
         }
     }
 }

@@ -22,33 +22,33 @@
                 android:id="@+id/btn_back"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_gravity="start"
                 android:src="@drawable/ic_arrow_back_white"
-                android:tint="@android:color/white"
-                android:layout_gravity="start"/>
+                android:tint="@android:color/white" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textSize="35sp"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/cafe24_oneprettynight"
-                android:textStyle="bold"
+                android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:layout_gravity="center"/>
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="@string/app_name"
+                android:textColor="#ffffff"
+                android:textSize="35sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/btn_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="미리보기"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/cafe24_oneprettynight"
                 android:layout_gravity="end"
-                android:layout_marginEnd="12dp"/>
+                android:layout_marginEnd="12dp"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="미리보기"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -63,109 +63,123 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2020년 1월 17일 금요일"
             android:fontFamily="@font/cafe24_oneprettynight"
+            android:padding="10dp"
+            android:text="2020년 1월 17일 금요일"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:padding="10dp"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/btn_change_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="날짜 변경"
+            android:layout_toEndOf="@+id/tv_date"
             android:fontFamily="@font/cafe24_oneprettynight"
+            android:gravity="end"
+            android:padding="10dp"
+            android:text="날짜 변경"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="15sp"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:layout_toEndOf="@+id/tv_date"
-            android:gravity="end"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="오늘의 사진 한 장"
+            android:layout_below="@id/tv_date"
             android:fontFamily="@font/cafe24_oneprettynight"
+            android:padding="10dp"
+            android:text="오늘의 사진 한 장"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:layout_below="@id/tv_date"/>
+            android:textStyle="bold" />
 
         <RelativeLayout
             android:id="@+id/rl_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_1"
             android:background="@drawable/rectangle_primary_dark"
-            android:padding="1dp"
-            android:layout_below="@+id/tv_1">
+            android:padding="1dp">
 
             <ImageView
                 android:id="@+id/img_post"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/default_image"
-                android:adjustViewBounds="true"/>
+                android:layout_height="@dimen/postImageHeight"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_image" />
 
             <TextView
                 android:id="@+id/btn_load_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="사진 불러오기"
-                android:fontFamily="@font/cafe24_oneprettynight"
                 android:layout_centerInParent="true"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="사진 불러오기"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오늘 당신의 하루는 어떠셨나요?"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:layout_below="@id/rl_1"
             android:layout_marginTop="5dp"
+            android:fontFamily="@font/cafe24_oneprettynight"
             android:padding="10dp"
-            android:layout_below="@id/rl_1"/>
+            android:text="오늘 당신의 하루는 어떠셨나요?"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/limit_text_len"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/txt_post"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:padding="5dp"
+            android:text="(0 / 126)"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/txt_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:importantForAutofill="no"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:padding="10dp"
-            android:ems="10"
-            android:textColor="#000000"
-            android:textColorHint="#000000"
-            android:gravity="start"
-            android:background="@drawable/rectangle_primary_dark"
             android:layout_above="@+id/btn_post"
             android:layout_below="@+id/tv_2"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/rectangle_primary_dark"
+            android:ems="10"
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:gravity="start"
+            android:importantForAutofill="no"
+            android:padding="10dp"
+            android:textColor="#000000"
+            android:textColorHint="#000000" />
 
         <Button
             android:id="@+id/btn_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="올리기"
-            android:textSize="18sp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:textColor="#ffffff"
             android:background="@color/colorPrimaryDark"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/cafe24_oneprettynight"
+            android:text="올리기"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>
