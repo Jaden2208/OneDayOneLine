@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 //        Log.d(TAG, "options 저장 완료")
         rv_main.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            diaryAdapter = DiaryRvAdapter()
+            diaryAdapter = DiaryRvAdapter(context)
             adapter = diaryAdapter
         }
         Log.d(TAG, "initRecyclerView 종료")
