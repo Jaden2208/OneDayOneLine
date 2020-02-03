@@ -1,6 +1,5 @@
-package com.whalez.onedayoneline.ui
+package com.whalez.onedayoneline.ui.home
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -11,33 +10,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.indyproject2.UserSessionManager
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.makeramen.roundedimageview.RoundedImageView
 import com.whalez.onedayoneline.R
-import com.whalez.onedayoneline.models.DiaryPost
-import kotlinx.android.synthetic.main.activity_post.view.*
+import com.whalez.onedayoneline.data.DiaryPost
+import com.whalez.onedayoneline.data.repositories.UserRepository
 import kotlinx.android.synthetic.main.diary_list_item.view.*
 
 class DiaryRvAdapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var firestore = FirebaseFirestore.getInstance()
     private var items: ArrayList<DiaryPost> = arrayListOf()
 
     init {
-        val userSessionManager = UserSessionManager(context)
-        val id = userSessionManager.userDetail["ID"]
-//        Log.d("kkkAdapter", "id: " + id)
-        firestore.collection("users/${id}/posts")
+//        val userSessionManager = UserSessionManager(context)
+//        val id = userSessionManager.userDetail["ID"]
+
+        firestore.collection("users/ryu2208@naver.com/posts")
+//        firestore.collection("users/${id}/posts")
             .orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { querySnapshot, _ ->
             items.clear()
-            Log.d("kkkAdapter", "snapshot: " + querySnapshot!!.documents.size)
-            for(snapshot in querySnapshot.documents){
-                Log.d("kkkAdapter", "snapshot: " + snapshot.toString())
+            for(snapshot in querySnapshot!!.documents){
                 val item = snapshot.toObject(DiaryPost::class.java)
                 items.add(item!!)
             }
@@ -46,7 +39,6 @@ class DiaryRvAdapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        Log.d("kkkAdapter", "onCreateViewHolder")
         return DiaryViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.diary_list_item,
@@ -69,22 +61,12 @@ class DiaryRvAdapter(context: Context): RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-//    fun submitList(diaryList: List<DiaryPost>){
-//        items = diaryList
-//    }
-
-    class DiaryViewHolder constructor(
-        itemView: View
-    ): RecyclerView.ViewHolder(itemView){
+    class DiaryViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView){
         private val contentText = itemView.content_text
         private val postDate = itemView.post_date
         private val imgPost = itemView.cv_image
 
         fun bind(diaryPost: DiaryPost){
-            Log.d("kkkAdapter", "bind")
-            Log.d("kkkAdapter", diaryPost.message.toString())
-            Log.d("kkkAdapter", diaryPost.date.toString())
-            Log.d("kkkAdapter", diaryPost.image_url.toString())
             contentText.text = diaryPost.message
             postDate.text = diaryPost.date
             Glide.with(itemView.context).load(diaryPost.image_url).into(imgPost)

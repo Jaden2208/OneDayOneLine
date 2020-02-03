@@ -1,4 +1,4 @@
-package com.whalez.onedayoneline.utils
+package com.whalez.onedayoneline.ui.home
 
 import androidx.recyclerview.widget.RecyclerView
 

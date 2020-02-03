@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
-import com.whalez.onedayoneline.ui.LoginActivity
-import com.whalez.onedayoneline.ui.MainActivity
+import com.whalez.onedayoneline.ui.auth.LoginActivity
+import com.whalez.onedayoneline.ui.home.HomeActivity
 import java.util.*
 
 class UserSessionManager(private var context: Context) {
@@ -38,7 +38,7 @@ class UserSessionManager(private var context: Context) {
         if (!isLogin) {
             val intent = Intent(context, LoginActivity::class.java)
             context.startActivity(intent)
-            (context as MainActivity).finish()
+            (context as HomeActivity).finish()
         }
     }
 
@@ -62,7 +62,7 @@ class UserSessionManager(private var context: Context) {
         editor.commit()
         val i = Intent(context, LoginActivity::class.java)
         context.startActivity(i)
-        (context as MainActivity).finish()
+        (context as HomeActivity).finish()
     }
 
 

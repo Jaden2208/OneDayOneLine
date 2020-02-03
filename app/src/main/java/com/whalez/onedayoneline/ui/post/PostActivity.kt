@@ -1,4 +1,4 @@
-package com.whalez.onedayoneline.ui
+package com.whalez.onedayoneline.ui.post
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,12 +15,7 @@ import com.aminography.primedatepicker.PickType
 import com.aminography.primedatepicker.fragment.PrimeDatePickerBottomSheet
 import com.bumptech.glide.Glide
 import com.example.indyproject2.UserSessionManager
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.gun0912.tedpermission.PermissionListener
@@ -87,7 +82,9 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                 // 기타 속성: https://github.com/aminography/PrimeDatePicker#usage
             )
             datePicker.setOnDateSetListener(this)
-            datePicker.show(supportFragmentManager, PICKER_TAG)
+            datePicker.show(supportFragmentManager,
+                PICKER_TAG
+            )
         }
 
         // 사진 불러오기 및 변경하기 버튼 클릭
@@ -168,7 +165,9 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             "image/*"
         )
-        startActivityForResult(intent, PICK_FROM_ALBUM)
+        startActivityForResult(intent,
+            PICK_FROM_ALBUM
+        )
     }
 
     private fun setImage(photoUri: Uri) {
