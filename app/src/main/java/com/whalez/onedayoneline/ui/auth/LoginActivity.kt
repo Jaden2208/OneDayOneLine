@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.res.ResourcesCompat
-import com.example.indyproject2.UserSessionManager
+import com.whalez.onedayoneline.sharedpreference.UserSessionManager
 import com.google.firebase.auth.FirebaseAuth
 import com.whalez.onedayoneline.R
 import com.whalez.onedayoneline.ui.home.HomeActivity
@@ -19,7 +19,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.btn_register
 
 class LoginActivity : AppCompatActivity() {
-    private val TAG = "kkk_LoginActivity"
+
+    private val TAG = "kkk.LoginActivity"
+
     private val EMAIL_FORMAT_ERROR = "The email address is badly formatted."
     private val NETWORK_ERROR = "An internal error has occurred. [ 7: ]"
     private val NO_USER_ERROR = "There is no user record corresponding to this identifier. The user may have been deleted."

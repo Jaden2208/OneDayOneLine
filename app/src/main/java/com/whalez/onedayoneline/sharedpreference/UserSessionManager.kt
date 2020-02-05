@@ -1,4 +1,4 @@
-package com.example.indyproject2
+package com.whalez.onedayoneline.sharedpreference
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,9 @@ import com.whalez.onedayoneline.ui.home.HomeActivity
 import java.util.*
 
 class UserSessionManager(private var context: Context) {
+
+    private val TAG = "kkk.UserSessionManager"
+
     private var sharedPreferences: SharedPreferences
     private var editor: Editor
     private var PRIVATE_MODE = 0

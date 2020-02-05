@@ -98,7 +98,7 @@
         <RelativeLayout
             android:id="@+id/rl_1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/postImageHeight"
             android:layout_below="@+id/tv_1"
             android:background="@drawable/rectangle_primary_dark"
             android:padding="1dp">
@@ -106,15 +106,16 @@
             <ImageView
                 android:id="@+id/img_post"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/postImageHeight"
+                android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/default_image" />
 
             <TextView
                 android:id="@+id/btn_load_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/cafe24_oneprettynight"
                 android:text="사진 불러오기"

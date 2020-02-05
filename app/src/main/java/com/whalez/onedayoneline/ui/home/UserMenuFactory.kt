@@ -15,6 +15,9 @@ import com.whalez.onedayoneline.R
 
 class UserMenuFactory: PowerMenu.Factory() {
 
+    private val TAG = "kkk.UserMenuFactory"
+
+
     override fun create(context: Context, lifecycle: LifecycleOwner): PowerMenu {
         return createPowerMenu(context) {
             addItem(PowerMenuItem("사용자 정보", false))

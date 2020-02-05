@@ -16,5 +16,3 @@ fun Context.startLoginActivity() =
         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(it)
     }
-
-fun Context.checkPasswordCoincidence(p1: String, p2: String) = p1 == p2

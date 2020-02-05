@@ -3,6 +3,9 @@ package com.whalez.onedayoneline.ui.home
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class MyRecyclerScroll : RecyclerView.OnScrollListener() {
+
+    private val TAG = "kkk.MyRecyclerScroll"
+
     private var scrollDist = 0
     private var isVisible = true
     private val MINIMUM = 25

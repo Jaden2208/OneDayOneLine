@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
-    private val TAG = "WHALEZ_RegisterActivity"
+    private val TAG = "kkk.RegisterActivity"
 
     private val EMAIL_FORMAT_ERROR = "The email address is badly formatted."
     private val USED_EMAIL_ERROR = "The email address is already in use by another account."

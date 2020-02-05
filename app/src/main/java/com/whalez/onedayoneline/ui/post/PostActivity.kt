@@ -14,20 +14,25 @@ import com.aminography.primecalendar.common.CalendarType
 import com.aminography.primedatepicker.PickType
 import com.aminography.primedatepicker.fragment.PrimeDatePickerBottomSheet
 import com.bumptech.glide.Glide
-import com.example.indyproject2.UserSessionManager
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter
+import com.whalez.onedayoneline.sharedpreference.UserSessionManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.whalez.onedayoneline.R
+import com.whalez.onedayoneline.models.DiaryPost
+import com.whalez.onedayoneline.ui.home.DiaryViewHolder
 import kotlinx.android.synthetic.main.activity_post.*
 import java.io.File
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
-    private val TAG = "kkk_PostActivity"
+    private val TAG = "kkk.PostActivity"
 
     //    var isStoragePermission = false
     private var imageFile: File? = null
@@ -61,7 +66,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         val today = CalendarFactory.newInstance(CalendarType.CIVIL)
         year = today.year.toString()
         month = (today.month + 1).toString()
-        day = today.month.toString()
+        day = today.dayOfMonth.toString()
         weekday = today.weekDayNameShort
         pickedDay = today
 
@@ -94,6 +99,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
 
         // 올리기 버튼 클릭
         btn_post.setOnClickListener {
+            Log.d(TAG, "올리기 버튼 클릭")
             val date = "" + year + '_' + month + '_' + day
             val imageRef: StorageReference = FirebaseStorage.getInstance().reference
                 .child("${id}/${date}.jpg")
@@ -102,7 +108,6 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                 Log.d(TAG, "파일 업로드 실패: ${it.message}")
             }.addOnSuccessListener {
                 Log.d(TAG, "파일 업로드 성공")
-                finish()
             }
 
             val postText = txt_post.text.toString()
@@ -123,7 +128,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                         .document("users/${id}/posts/${pickedDay.timeInMillis}")
                     mDocRef.set(dataToSave).addOnSuccessListener {
                         Log.d(TAG, "InspiringQuote : Document has been saved!")
-//                        mDocRef.collection("users/${id}").orderBy(TIME_STAMP, Query.Direction.DESCENDING)
+                        finish()
                     }.addOnFailureListener { e ->
                         Log.d(TAG, "InspiringQuote : NO! - " + e.message)
                     }
