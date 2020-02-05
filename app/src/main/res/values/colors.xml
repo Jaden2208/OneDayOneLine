@@ -6,4 +6,5 @@
     <color name="colorPrimarySuperLight">#80D8FF</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorDisableButton">#A0A0A0</color>
+    <color name="colorSemiRed">#FF3434</color>
 </resources>

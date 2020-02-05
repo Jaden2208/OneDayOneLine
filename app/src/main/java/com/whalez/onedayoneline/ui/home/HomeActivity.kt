@@ -26,6 +26,7 @@ import com.whalez.onedayoneline.models.DiaryPost
 import com.whalez.onedayoneline.ui.auth.LoginActivity
 import com.whalez.onedayoneline.ui.post.PostActivity
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.diary_list_item.*
 
 class HomeActivity: AppCompatActivity(){
 
@@ -65,6 +66,18 @@ class HomeActivity: AppCompatActivity(){
         // 메뉴 아이템 클릭
         menu.setOnMenuItemClickListener { position, item ->
             Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
+            when(position) {
+                0 -> {
+                    delete_checkbox.visibility = View.VISIBLE
+                    btn_delete.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        // 삭제 버튼 클릭
+        btn_delete.setOnClickListener {
+            delete_checkbox.visibility = View.GONE
+            btn_delete.visibility = View.GONE
         }
 
         // 사용자 메뉴 버튼 클릭

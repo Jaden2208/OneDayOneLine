@@ -19,9 +19,9 @@ class PowerMenuFactory: PowerMenu.Factory() {
 
     override fun create(context: Context, lifecycle: LifecycleOwner): PowerMenu {
         return createPowerMenu(context) {
+            addItem(PowerMenuItem("삭제하기", false))
             addItem(PowerMenuItem("개발자 정보", false))
             addItem(PowerMenuItem("문의하기", false))
-            addItem(PowerMenuItem("WHALEZ", false))
             addItem(PowerMenuItem("Licenses", false))
             /* PowerMenu methods link
              * https://github.com/skydoves/PowerMenu#powermenu-methods

@@ -38,7 +38,7 @@
             android:id="@+id/post_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="10dp"
             android:text="2020.01.17 목"
@@ -46,6 +46,14 @@
             android:textColor="#000"
             android:fontFamily="@font/cafe24_oneprettynight"
             android:textStyle="bold"/>
+
+        <CheckBox
+            android:id="@+id/delete_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
