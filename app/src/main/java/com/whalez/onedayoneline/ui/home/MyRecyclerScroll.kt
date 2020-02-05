@@ -10,6 +10,7 @@ abstract class MyRecyclerScroll : RecyclerView.OnScrollListener() {
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
+        // 스크롤에 따른 subtitle 사라짐 효과
         if (isVisible && scrollDist > MINIMUM) {
             hide()
             scrollDist = 0

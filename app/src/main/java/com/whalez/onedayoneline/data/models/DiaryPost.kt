@@ -1,4 +1,4 @@
-package com.whalez.onedayoneline.data
+package com.whalez.onedayoneline.data.models
 
 data class DiaryPost(
     var date: String? = null,
