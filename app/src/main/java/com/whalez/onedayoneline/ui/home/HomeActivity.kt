@@ -1,11 +1,8 @@
 package com.whalez.onedayoneline.ui.home
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
@@ -14,15 +11,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.view.isEmpty
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.whalez.onedayoneline.sharedpreference.UserSessionManager
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -32,7 +26,6 @@ import com.whalez.onedayoneline.models.DiaryPost
 import com.whalez.onedayoneline.ui.auth.LoginActivity
 import com.whalez.onedayoneline.ui.post.PostActivity
 import kotlinx.android.synthetic.main.activity_home.*
-
 
 class HomeActivity: AppCompatActivity(){
 
@@ -76,6 +69,7 @@ class HomeActivity: AppCompatActivity(){
 
         // 사용자 메뉴 버튼 클릭
         btn_user.setOnClickListener { userMenu.showAsDropDown(it) }
+
         // 사용자 메뉴 아이템 클릭
         userMenu.setOnMenuItemClickListener { position, item ->
             when (position) {
@@ -136,19 +130,12 @@ class HomeActivity: AppCompatActivity(){
         mAdapter.startListening()
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume")
-    }
-
     override fun onStop() {
         super.onStop()
-        Log.d(TAG, "onStop")
         mAdapter.stopListening()
     }
 
     private fun setupAdapter(){
-        Log.d(TAG, "setupAdapter 진입")
         mPostsCollection = mFirestore.collection("users/${userEmail}/posts")
         mQuery = mPostsCollection.orderBy("timestamp", Query.Direction.DESCENDING)
 
@@ -167,25 +154,24 @@ class HomeActivity: AppCompatActivity(){
 
         // FireStore 페이징 어댑터 초기화
         mAdapter = object : FirestorePagingAdapter<DiaryPost, DiaryViewHolder>(options) {
-            init {
-                Log.d(TAG, "PagingAdapter 진입")
-            }
+//            init {
+//                Log.d(TAG, "PagingAdapter 진입")
+//            }
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
-                Log.d(TAG, "onCreateViewHolder진입")
+//                Log.d(TAG, "onCreateViewHolder진입")
                 val view = layoutInflater.inflate(R.layout.diary_list_item, parent, false)
                 return DiaryViewHolder(view)
             }
 
             override fun onBindViewHolder(viewHolder: DiaryViewHolder, position: Int, post: DiaryPost) {
-                Log.d(TAG, "onBindeViewHolder진입")
-                Log.d("kkk Post", post.toString())
+//                Log.d(TAG, "onBindeViewHolder진입")
                 viewHolder.bind(post)
 
             }
 
             override fun onError(e: Exception) {
                 super.onError(e)
-                Log.e("kkkMainActivity", e.message)
+                Log.e("kkkMainActivity", e.message.toString())
             }
 
             override fun refresh() {
