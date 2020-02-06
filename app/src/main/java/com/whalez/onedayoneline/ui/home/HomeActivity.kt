@@ -12,7 +12,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.paging.PagedList
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.whalez.onedayoneline.sharedpreference.UserSessionManager
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
@@ -28,7 +30,7 @@ import com.whalez.onedayoneline.ui.post.PostActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.diary_list_item.*
 
-class HomeActivity: AppCompatActivity(){
+class HomeActivity : AppCompatActivity() {
 
     private val TAG = "kkk.HomeActivity"
 
@@ -56,6 +58,33 @@ class HomeActivity: AppCompatActivity(){
 
         setupAdapter()
 
+        // Swipe를 통한 아이템 삭제
+        val mIth = ItemTouchHelper(
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false // true if moved, false otherwise
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    // remove from adapter
+                    viewHolder as DiaryViewHolder
+                    mFirestore.collection("users/${userEmail}/posts").document(viewHolder.timestamp)
+                        .delete()
+                        .addOnSuccessListener {
+                            mAdapter.refresh()
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+
+                }
+            })
+        mIth.attachToRecyclerView(rv_main)
+
         // Refresh Action on Swipe Refresh Layout
         swipeRefreshLayout.setOnRefreshListener {
             mAdapter.refresh()
@@ -66,8 +95,8 @@ class HomeActivity: AppCompatActivity(){
         // 메뉴 아이템 클릭
         menu.setOnMenuItemClickListener { position, item ->
             Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
-            when(position) {
-                0 -> {
+            when (position) {
+                0 -> { // 삭제
                     delete_checkbox.visibility = View.VISIBLE
                     btn_delete.visibility = View.VISIBLE
                 }
@@ -116,6 +145,7 @@ class HomeActivity: AppCompatActivity(){
             startActivity(intent)
         }
 
+
         // Recyclerview ScrollListener
         rv_main.addOnScrollListener(object : MyRecyclerScroll() {
             override fun show() {
@@ -148,7 +178,7 @@ class HomeActivity: AppCompatActivity(){
         mAdapter.stopListening()
     }
 
-    private fun setupAdapter(){
+    private fun setupAdapter() {
         mPostsCollection = mFirestore.collection("users/${userEmail}/posts")
         mQuery = mPostsCollection.orderBy("timestamp", Query.Direction.DESCENDING)
 
@@ -166,36 +196,17 @@ class HomeActivity: AppCompatActivity(){
             .build()
 
         // FireStore 페이징 어댑터 초기화
-        mAdapter = object : FirestorePagingAdapter<DiaryPost, DiaryViewHolder>(options) {
-//            init {
-//                Log.d(TAG, "PagingAdapter 진입")
-//            }
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
-//                Log.d(TAG, "onCreateViewHolder진입")
-                val view = layoutInflater.inflate(R.layout.diary_list_item, parent, false)
-                return DiaryViewHolder(view)
-            }
+        mAdapter = object : RecyclerViewPagingAdapter(options) {
 
-            override fun onBindViewHolder(viewHolder: DiaryViewHolder, position: Int, post: DiaryPost) {
-//                Log.d(TAG, "onBindeViewHolder진입")
-                viewHolder.bind(post)
-
-            }
-
-            override fun onError(e: Exception) {
-                super.onError(e)
-                Log.e("kkkMainActivity", e.message.toString())
-            }
 
             override fun refresh() {
                 super.refresh()
                 Log.d(TAG, "refresh!")
                 mQuery.get().addOnCompleteListener {
                     val itemCount = it.result!!.documents.size
-                    if(itemCount == 0){
+                    if (itemCount == 0) {
                         tutorial.visibility = View.VISIBLE
-                    }
-                    else{
+                    } else {
                         tutorial.visibility = View.GONE
                     }
                 }
@@ -231,6 +242,7 @@ class HomeActivity: AppCompatActivity(){
                     }
                 }
             }
+
         }
 
         // Finally Set the Adapter to RecyclerView
