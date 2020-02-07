@@ -2,11 +2,10 @@ package com.whalez.onedayoneline.ui.home
 
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.whalez.onedayoneline.models.DiaryPost
+import com.whalez.onedayoneline.model.DiaryPost
 import kotlinx.android.synthetic.main.diary_list_item.view.*
 
 class DiaryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

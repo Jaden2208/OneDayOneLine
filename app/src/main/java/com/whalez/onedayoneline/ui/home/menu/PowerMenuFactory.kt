@@ -1,4 +1,4 @@
-package com.whalez.onedayoneline.ui.home
+package com.whalez.onedayoneline.ui.home.menu
 
 import android.content.Context
 import android.graphics.Color
@@ -13,21 +13,22 @@ import com.skydoves.powermenu.PowerMenuItem
 import com.skydoves.powermenu.kotlin.createPowerMenu
 import com.whalez.onedayoneline.R
 
-class UserMenuFactory: PowerMenu.Factory() {
+class PowerMenuFactory: PowerMenu.Factory() {
 
-    private val TAG = "kkk.UserMenuFactory"
-
+    private val TAG = "kkk.PowerMenuFactory"
 
     override fun create(context: Context, lifecycle: LifecycleOwner): PowerMenu {
         return createPowerMenu(context) {
-            addItem(PowerMenuItem("사용자 정보", false))
-            addItem(PowerMenuItem("로그아웃", false))
+            addItem(PowerMenuItem("삭제하기", false))
+            addItem(PowerMenuItem("개발자 정보", false))
+            addItem(PowerMenuItem("문의하기", false))
+            addItem(PowerMenuItem("Licenses", false))
             /* PowerMenu methods link
              * https://github.com/skydoves/PowerMenu#powermenu-methods
              */
             setAutoDismiss(true)
             setLifecycleOwner(lifecycle)
-            setAnimation(MenuAnimation.SHOWUP_TOP_RIGHT)
+            setAnimation(MenuAnimation.SHOWUP_TOP_LEFT)
             setCircularEffect(CircularEffect.BODY)
             setMenuRadius(10f)
             setMenuShadow(10f)

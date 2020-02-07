@@ -89,4 +89,7 @@ dependencies {
 
     // Paging
     implementation 'android.arch.paging:runtime:1.0.1'
+
+    // Material Progressbar
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 }

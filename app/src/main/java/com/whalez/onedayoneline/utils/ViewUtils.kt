@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.whalez.onedayoneline.ui.auth.LoginActivity
 import com.whalez.onedayoneline.ui.home.HomeActivity
+import kotlinx.android.synthetic.main.activity_post.*
 
 fun Context.startHomeActivity() =
     Intent(this, HomeActivity::class.java).also {

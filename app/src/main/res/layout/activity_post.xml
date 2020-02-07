@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/toolbarHeight"
         android:layout_alignParentTop="true">
 
         <androidx.appcompat.widget.Toolbar
@@ -165,7 +165,8 @@
             android:importantForAutofill="no"
             android:padding="10dp"
             android:textColor="#000000"
-            android:textColorHint="#000000" />
+            android:textColorHint="#000000"
+            android:maxLength="126"/>
 
         <Button
             android:id="@+id/btn_post"
@@ -179,6 +180,23 @@
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#A0A0A0A0"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                android:layout_gravity="center"
+                android:layout_margin="30dp"/>
+
+        </FrameLayout>
 
     </RelativeLayout>
 

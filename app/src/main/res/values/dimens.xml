@@ -3,4 +3,5 @@
 <resources>
     <dimen name="itemImageHeight">200dp</dimen>
     <dimen name="postImageHeight">300dp</dimen>
+    <dimen name="toolbarHeight">60dp</dimen>
 </resources>

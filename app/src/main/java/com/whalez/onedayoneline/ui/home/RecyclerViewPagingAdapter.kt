@@ -6,8 +6,7 @@ import android.view.ViewGroup
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.whalez.onedayoneline.R
-import com.whalez.onedayoneline.models.DiaryPost
-
+import com.whalez.onedayoneline.model.DiaryPost
 
 open class RecyclerViewPagingAdapter(options: FirestorePagingOptions<DiaryPost>) :
     FirestorePagingAdapter<DiaryPost, DiaryViewHolder>(options) {
@@ -18,7 +17,6 @@ open class RecyclerViewPagingAdapter(options: FirestorePagingOptions<DiaryPost>)
         return DiaryViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: DiaryViewHolder, position: Int, model: DiaryPost) {
         holder.bind(model)
     }
@@ -27,7 +25,6 @@ open class RecyclerViewPagingAdapter(options: FirestorePagingOptions<DiaryPost>)
         super.onError(e)
         Log.e(TAG, e.message.toString())
     }
-
 
 }
 

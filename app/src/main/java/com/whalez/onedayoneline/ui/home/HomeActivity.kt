@@ -4,9 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,8 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.skydoves.powermenu.kotlin.powerMenu
 import com.whalez.onedayoneline.R
-import com.whalez.onedayoneline.models.DiaryPost
+import com.whalez.onedayoneline.model.DiaryPost
 import com.whalez.onedayoneline.ui.auth.LoginActivity
+import com.whalez.onedayoneline.ui.home.menu.PowerMenuFactory
+import com.whalez.onedayoneline.ui.home.menu.UserMenuFactory
 import com.whalez.onedayoneline.ui.post.PostActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.diary_list_item.*
@@ -43,11 +42,11 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var mQuery: Query
     private lateinit var userEmail: String
 
+    private val showItemCounts = 5 // ==> 5 * 3 개 씩 로드 됨
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        Log.d(TAG, "onCreate")
 
         val userSessionManager = UserSessionManager(this)
         userSessionManager.checkLogin()
@@ -144,26 +143,6 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, PostActivity::class.java)
             startActivity(intent)
         }
-
-
-        // Recyclerview ScrollListener
-        rv_main.addOnScrollListener(object : MyRecyclerScroll() {
-            override fun show() {
-                fab_subtitle.animate().translationY(0F).setInterpolator(DecelerateInterpolator(2F))
-                    .start()
-                rv_main.animate().translationY(0F).setInterpolator(DecelerateInterpolator(2F))
-                    .start()
-            }
-
-            override fun hide() {
-                fab_subtitle.animate().translationY(0F - fab_subtitle.height).setInterpolator(
-                    AccelerateInterpolator(2F)
-                ).start()
-                rv_main.animate().translationY(0F - fab_subtitle.height)
-                    .setInterpolator(AccelerateInterpolator(2F)).start()
-            }
-
-        })
     }
 
     override fun onStart() {
@@ -186,7 +165,7 @@ class HomeActivity : AppCompatActivity() {
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPrefetchDistance(2)
-            .setPageSize(5) // 이 메서드의 파라미터 * 3 개 씩 로드 됨.
+            .setPageSize(showItemCounts)
             .build()
 
         // Init Adapter Configuration
@@ -197,7 +176,6 @@ class HomeActivity : AppCompatActivity() {
 
         // FireStore 페이징 어댑터 초기화
         mAdapter = object : RecyclerViewPagingAdapter(options) {
-
 
             override fun refresh() {
                 super.refresh()
@@ -242,12 +220,9 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             }
-
         }
-
         // Finally Set the Adapter to RecyclerView
         rv_main.adapter = mAdapter
-
     }
 
 }

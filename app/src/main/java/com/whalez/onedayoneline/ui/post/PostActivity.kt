@@ -2,19 +2,23 @@ package com.whalez.onedayoneline.ui.post
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.aminography.primecalendar.PrimeCalendar
 import com.aminography.primecalendar.common.CalendarFactory
 import com.aminography.primecalendar.common.CalendarType
 import com.aminography.primedatepicker.PickType
 import com.aminography.primedatepicker.fragment.PrimeDatePickerBottomSheet
 import com.bumptech.glide.Glide
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.whalez.onedayoneline.sharedpreference.UserSessionManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -22,12 +26,10 @@ import com.google.firebase.storage.StorageReference
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.whalez.onedayoneline.R
-import com.whalez.onedayoneline.models.DiaryPost
-import com.whalez.onedayoneline.ui.home.DiaryViewHolder
 import kotlinx.android.synthetic.main.activity_post.*
+import kotlinx.android.synthetic.main.activity_post.progressbar
+import kotlinx.android.synthetic.main.activity_register.*
 import java.io.File
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPickedListener {
@@ -48,6 +50,8 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
     private val IMAGE_URL = "image_url"
     private val DATE = "date"
     private val TIME_STAMP = "timestamp"
+
+    private val TXT_POST_LIMIT_LEN = 126
 
     companion object {
         const val PICKER_TAG = "PrimeDatePickerBottomSheet"
@@ -87,7 +91,8 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                 // 기타 속성: https://github.com/aminography/PrimeDatePicker#usage
             )
             datePicker.setOnDateSetListener(this)
-            datePicker.show(supportFragmentManager,
+            datePicker.show(
+                supportFragmentManager,
                 PICKER_TAG
             )
         }
@@ -97,22 +102,51 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
             goToAlbum()
         }
 
+        txt_post.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val wordCount = txt_post.length()
+                limit_text_len.text = "(${wordCount} / ${TXT_POST_LIMIT_LEN})"
+                if(wordCount == TXT_POST_LIMIT_LEN){
+                    limit_text_len.setTextColor( ContextCompat.getColor(
+                        applicationContext,
+                        R.color.colorAccent
+                    ))
+                } else {
+                    limit_text_len.setTextColor( ContextCompat.getColor(
+                        applicationContext,
+                        R.color.colorPrimaryLight
+                    ))
+                }
+            }
+
+        })
+
         // 올리기 버튼 클릭
         btn_post.setOnClickListener {
+            progressLayout.visibility = View.VISIBLE
+
+            postBtnDisabled()
+
+            val postText = txt_post.text.toString()
+            val dataToSave = mutableMapOf<String, Any>()
             Log.d(TAG, "올리기 버튼 클릭")
             val date = "" + year + '_' + month + '_' + day
             val imageRef: StorageReference = FirebaseStorage.getInstance().reference
                 .child("${id}/${date}.jpg")
             val uploadTask = imageRef.putFile(photoUri)
+
             uploadTask.addOnFailureListener {
                 Log.d(TAG, "파일 업로드 실패: ${it.message}")
             }.addOnSuccessListener {
                 Log.d(TAG, "파일 업로드 성공")
-            }
-
-            val postText = txt_post.text.toString()
-            val dataToSave = mutableMapOf<String, Any>()
-            uploadTask.continueWithTask<Uri> { task ->
+            }.addOnProgressListener {
+                val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
+                progressbar.progress = progress.toInt()
+            }.continueWithTask<Uri> { task ->
                 if (!task.isSuccessful) {
                     throw task.exception!!
                 }
@@ -124,14 +158,14 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                     dataToSave[IMAGE_URL] = downloadUri.toString()
                     dataToSave[DATE] = tv_date.text.toString()
                     dataToSave[TIME_STAMP] = pickedDay.timeInMillis.toString()
-                    val mDocRef = FirebaseFirestore.getInstance()
+                    FirebaseFirestore.getInstance()
                         .document("users/${id}/posts/${pickedDay.timeInMillis}")
-                    mDocRef.set(dataToSave).addOnSuccessListener {
-                        Log.d(TAG, "InspiringQuote : Document has been saved!")
-                        finish()
-                    }.addOnFailureListener { e ->
-                        Log.d(TAG, "InspiringQuote : NO! - " + e.message)
-                    }
+                        .set(dataToSave).addOnSuccessListener {
+                            Log.d(TAG, "InspiringQuote : Document has been saved!")
+                            finish()
+                        }.addOnFailureListener { e ->
+                            Log.d(TAG, "InspiringQuote : NO! - " + e.message)
+                        }
                 } else {
                     Log.d(TAG, "task fail: " + task.exception)
                 }
@@ -170,7 +204,8 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             "image/*"
         )
-        startActivityForResult(intent,
+        startActivityForResult(
+            intent,
             PICK_FROM_ALBUM
         )
     }
@@ -184,12 +219,10 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         val permissionListener: PermissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
                 Log.d(TAG, "저장소 접근 권한 주어짐")
-//                isStoragePermission = true
             }
 
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>) {
                 Log.d(TAG, "저장소 접근 권한 거절")
-//                isStoragePermission = false
             }
         }
 
@@ -201,6 +234,15 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
             .check()
+    }
+
+    private fun postBtnDisabled() {
+        btn_back.isClickable = false
+        btn_preview.isClickable = false
+        btn_change_date.isClickable = false
+        btn_load_img.isClickable = false
+        txt_post.isClickable = false
+        btn_post.isClickable = false
     }
 
 }
