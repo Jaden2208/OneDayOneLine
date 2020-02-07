@@ -57,33 +57,6 @@ class HomeActivity : AppCompatActivity() {
 
         setupAdapter()
 
-        // Swipe를 통한 아이템 삭제
-        val mIth = ItemTouchHelper(
-            object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT
-            ) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false // true if moved, false otherwise
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    // remove from adapter
-                    viewHolder as DiaryViewHolder
-                    mFirestore.collection("users/${userEmail}/posts").document(viewHolder.timestamp)
-                        .delete()
-                        .addOnSuccessListener {
-                            mAdapter.refresh()
-                            Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
-
-                }
-            })
-        mIth.attachToRecyclerView(rv_main)
-
         // Refresh Action on Swipe Refresh Layout
         swipeRefreshLayout.setOnRefreshListener {
             mAdapter.refresh()
@@ -96,16 +69,8 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, item.title, Toast.LENGTH_SHORT).show()
             when (position) {
                 0 -> { // 삭제
-                    delete_checkbox.visibility = View.VISIBLE
-                    btn_delete.visibility = View.VISIBLE
                 }
             }
-        }
-
-        // 삭제 버튼 클릭
-        btn_delete.setOnClickListener {
-            delete_checkbox.visibility = View.GONE
-            btn_delete.visibility = View.GONE
         }
 
         // 사용자 메뉴 버튼 클릭
@@ -137,6 +102,34 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // Swipe를 통한 아이템 삭제
+        val mIth = ItemTouchHelper(
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false // true if moved, false otherwise
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    // remove from adapter
+                    viewHolder as DiaryViewHolder
+                    mFirestore.collection("users/${userEmail}/posts")
+                        .document(viewHolder.postDateText)
+                        .delete()
+                        .addOnSuccessListener {
+                            mAdapter.refresh()
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+
+                }
+            })
+        mIth.attachToRecyclerView(rv_main)
 
         // (+) 버튼 클릭
         btn_post.setOnClickListener {

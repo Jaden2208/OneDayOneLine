@@ -2,7 +2,6 @@ package com.whalez.onedayoneline.ui.post
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +10,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import com.aminography.primecalendar.PrimeCalendar
 import com.aminography.primecalendar.common.CalendarFactory
@@ -22,13 +23,11 @@ import com.bumptech.glide.Glide
 import com.whalez.onedayoneline.sharedpreference.UserSessionManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.whalez.onedayoneline.R
 import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.activity_post.progressbar
-import kotlinx.android.synthetic.main.activity_register.*
 import java.io.File
 import java.util.*
 
@@ -64,7 +63,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         setContentView(R.layout.activity_post)
 
         val userSessionManager = UserSessionManager(this)
-        val id = userSessionManager.userDetail["ID"]
+        val id = userSessionManager.userDetail["ID"].toString()
 
         var datePicker: PrimeDatePickerBottomSheet
         val today = CalendarFactory.newInstance(CalendarType.CIVIL)
@@ -127,49 +126,8 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
 
         // 올리기 버튼 클릭
         btn_post.setOnClickListener {
-            progressLayout.visibility = View.VISIBLE
-
             postBtnDisabled()
-
-            val postText = txt_post.text.toString()
-            val dataToSave = mutableMapOf<String, Any>()
-            Log.d(TAG, "올리기 버튼 클릭")
-            val date = "" + year + '_' + month + '_' + day
-            val imageRef: StorageReference = FirebaseStorage.getInstance().reference
-                .child("${id}/${date}.jpg")
-            val uploadTask = imageRef.putFile(photoUri)
-
-            uploadTask.addOnFailureListener {
-                Log.d(TAG, "파일 업로드 실패: ${it.message}")
-            }.addOnSuccessListener {
-                Log.d(TAG, "파일 업로드 성공")
-            }.addOnProgressListener {
-                val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
-                progressbar.progress = progress.toInt()
-            }.continueWithTask<Uri> { task ->
-                if (!task.isSuccessful) {
-                    throw task.exception!!
-                }
-                imageRef.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result
-                    dataToSave[MESSAGE] = postText
-                    dataToSave[IMAGE_URL] = downloadUri.toString()
-                    dataToSave[DATE] = tv_date.text.toString()
-                    dataToSave[TIME_STAMP] = pickedDay.timeInMillis.toString()
-                    FirebaseFirestore.getInstance()
-                        .document("users/${id}/posts/${pickedDay.timeInMillis}")
-                        .set(dataToSave).addOnSuccessListener {
-                            Log.d(TAG, "InspiringQuote : Document has been saved!")
-                            finish()
-                        }.addOnFailureListener { e ->
-                            Log.d(TAG, "InspiringQuote : NO! - " + e.message)
-                        }
-                } else {
-                    Log.d(TAG, "task fail: " + task.exception)
-                }
-            }
+            ifThereIsNoDataInFireStoreThanUploadFile(id)
         }
     }
 
@@ -236,13 +194,89 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
             .check()
     }
 
+    private fun ifThereIsNoDataInFireStoreThanUploadFile(id: String){
+        val collectionPath = "users/${id}/posts"
+        val dateText = tv_date.text
+        FirebaseFirestore.getInstance()
+            .collection(collectionPath).whereEqualTo("date", dateText).get()
+            .addOnSuccessListener {
+                // 파일이 Storage에 존재하지 않으면 데이터 업로드
+                if (it.documents.isEmpty()) {
+                    val date = "" + year + '_' + month + '_' + day
+                    val imageRef = FirebaseStorage.getInstance().reference
+                        .child("${id}/${date}.jpg")
+                    val uploadTask = imageRef.putFile(photoUri)
+                    val dataToSave = mutableMapOf<String, Any>()
+                    uploadTask.addOnFailureListener {
+                        Log.d(TAG, "파일 업로드 실패: ${it.message}")
+                    }.addOnSuccessListener {
+                        Log.d(TAG, "파일 업로드 성공")
+                    }.addOnProgressListener {
+                        val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
+                        progressbar.progress = progress.toInt()
+                    }.continueWithTask<Uri> { task ->
+                        if (!task.isSuccessful) {
+                            throw task.exception!!
+                        }
+                        imageRef.downloadUrl
+                    }.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val imageUri = task.result
+                            dataToSave[MESSAGE] = txt_post.text.toString()
+                            dataToSave[IMAGE_URL] = imageUri.toString()
+                            dataToSave[DATE] = dateText
+                            dataToSave[TIME_STAMP] = pickedDay.timeInMillis.toString()
+                            FirebaseFirestore.getInstance()
+                                .collection(collectionPath)
+                                .document(dataToSave[DATE].toString())
+                                .set(dataToSave).addOnSuccessListener {
+                                    Log.d(TAG, "InspiringQuote : Document has been saved!")
+                                    finish()
+                                }.addOnFailureListener { e ->
+                                    Log.d(TAG, "InspiringQuote : NO! - " + e.message)
+                                }
+                        } else {
+                            Log.d(TAG, "task fail: " + task.exception)
+                        }
+                    }
+                }
+                // 파일이 Storage에 이미 존재 하면,
+                else {
+                    val builder = AlertDialog.Builder(
+                        ContextThemeWrapper(
+                            this,
+                            R.style.MyAlertDialogStyle
+                        )
+                    )
+                    builder.setMessage("해당 날짜에 이미 기록되어있습니다!")
+                        .setPositiveButton("확인") { _, _ ->
+                            postBtnEnabled()
+                        }
+                        .show()
+                }
+            }
+            .addOnFailureListener {
+                Log.d(TAG, it.message.toString())
+            }
+    }
+
     private fun postBtnDisabled() {
+        progressLayout.visibility = View.VISIBLE
         btn_back.isClickable = false
         btn_preview.isClickable = false
         btn_change_date.isClickable = false
         btn_load_img.isClickable = false
         txt_post.isClickable = false
         btn_post.isClickable = false
+    }
+    private fun postBtnEnabled() {
+        btn_back.isClickable = true
+        btn_preview.isClickable = true
+        btn_change_date.isClickable = true
+        btn_load_img.isClickable = true
+        txt_post.isClickable = true
+        btn_post.isClickable = true
+        progressLayout.visibility = View.GONE
     }
 
 }

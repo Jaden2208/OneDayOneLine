@@ -144,17 +144,4 @@
             android:src="@drawable/ic_diagonal_arrows" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="10dp"
-        android:background="@color/colorSemiRed"
-        android:text="삭제하기"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

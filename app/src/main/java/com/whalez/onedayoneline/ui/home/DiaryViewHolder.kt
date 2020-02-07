@@ -13,15 +13,17 @@ class DiaryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val TAG = "kkk.DiaryViewHolder"
 
     private val contentText = itemView.content_text
-    lateinit var timestamp: String
+//    lateinit var timestamp: String
     private val postDate = itemView.post_date
+    lateinit var postDateText: String
     private val imgPost = itemView.cv_image
 
     fun bind(diaryPost: DiaryPost) {
-        timestamp = diaryPost.timestamp.toString()
+//        timestamp = diaryPost.timestamp.toString()
         contentText.text = diaryPost.message
         postDate.text = diaryPost.date
         Glide.with(itemView.context).load(diaryPost.image_url).into(imgPost)
         imgPost.setColorFilter(Color.parseColor("#A0A0A0"), PorterDuff.Mode.SCREEN)
+        postDateText = postDate.text.toString()
     }
 }

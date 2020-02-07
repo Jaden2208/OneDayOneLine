@@ -186,13 +186,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#A0A0A0A0"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/progressbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+                android:progressBackgroundTint="#FFFFFF"
+                android:progressTint="@color/colorPrimaryLight"
                 android:layout_gravity="center"
                 android:layout_margin="30dp"/>
 

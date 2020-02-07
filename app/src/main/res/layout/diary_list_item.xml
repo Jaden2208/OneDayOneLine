@@ -47,14 +47,6 @@
             android:fontFamily="@font/cafe24_oneprettynight"
             android:textStyle="bold"/>
 
-        <CheckBox
-            android:id="@+id/delete_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:visibility="gone"/>
-
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
