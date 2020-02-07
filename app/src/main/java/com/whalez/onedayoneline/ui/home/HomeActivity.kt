@@ -106,7 +106,7 @@ class HomeActivity : AppCompatActivity() {
         // Swipe를 통한 아이템 삭제
         val mIth = ItemTouchHelper(
             object : ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.ACTION_STATE_DRAG,
                 ItemTouchHelper.LEFT
             ) {
                 override fun onMove(
@@ -117,15 +117,31 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    // remove from adapter
-                    viewHolder as DiaryViewHolder
-                    mFirestore.collection("users/${userEmail}/posts")
-                        .document(viewHolder.postDateText)
-                        .delete()
-                        .addOnSuccessListener {
+                    val builder = AlertDialog.Builder(
+                        ContextThemeWrapper(
+                            this@HomeActivity,
+                            R.style.MyAlertDialogStyle
+                        )
+                    )
+                    builder.setMessage("정말 삭제하시겠습니까?")
+                        .setPositiveButton("예") { _, _ ->
+                            // remove from adapter
+                            viewHolder as DiaryViewHolder
+                            mFirestore.collection("users/${userEmail}/posts")
+                                .document(viewHolder.postDateText)
+                                .delete()
+                                .addOnSuccessListener {
+                                    mAdapter.refresh()
+                                    Toast.makeText(this@HomeActivity, "정상적으로 삭제되었습니다.", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                        }
+                        .setNegativeButton("아니요") {_, _ ->
                             mAdapter.refresh()
-                            Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                        }
+                        .show()
+
 
                 }
             })

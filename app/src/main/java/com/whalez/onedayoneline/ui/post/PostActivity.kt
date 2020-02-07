@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
@@ -39,7 +40,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
     private var imageFile: File? = null
 
     private lateinit var pickedDay: PrimeCalendar
-    private lateinit var photoUri: Uri
+    private var photoUri: Uri = Uri.EMPTY
     private lateinit var year: String
     private lateinit var month: String
     private lateinit var day: String
@@ -126,6 +127,12 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
 
         // 올리기 버튼 클릭
         btn_post.setOnClickListener {
+            Log.d(TAG, "버튼 눌림")
+            if(thereIsEmptySpace()){
+                Toast.makeText(this@PostActivity, "사진과 메시지를 모두 입력하세요.", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
             postBtnDisabled()
             ifThereIsNoDataInFireStoreThanUploadFile(id)
         }
@@ -244,7 +251,7 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                 else {
                     val builder = AlertDialog.Builder(
                         ContextThemeWrapper(
-                            this,
+                            this@PostActivity,
                             R.style.MyAlertDialogStyle
                         )
                     )
@@ -277,6 +284,13 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
         txt_post.isClickable = true
         btn_post.isClickable = true
         progressLayout.visibility = View.GONE
+    }
+    private fun thereIsEmptySpace(): Boolean {
+        Log.d(TAG, "thereIsEmptySpace 진입")
+        if (photoUri.toString() == "" || txt_post.text.toString() == "") {
+            return true
+        }
+        return false
     }
 
 }
