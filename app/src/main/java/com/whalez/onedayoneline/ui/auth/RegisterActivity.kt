@@ -15,6 +15,8 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.whalez.onedayoneline.R
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.activity_register.btn_register
+import kotlinx.android.synthetic.main.activity_register.txt_id
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -41,6 +43,7 @@ class RegisterActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         // 회원가입 버튼 클릭
         btn_register.setOnClickListener {
+            showLoadingView()
             val id = txt_id.text.toString()
             auth.createUserWithEmailAndPassword(id, password1)
                 .addOnCompleteListener(this) {
@@ -59,7 +62,7 @@ class RegisterActivity : AppCompatActivity() {
                                     )
                                     builder.setMessage("본인 확인을 위한 이메일을\n[" + user.email + "] (으)로 보냈습니다.")
                                         .setPositiveButton("확인") { _, _ ->
-                                            gotoLoginPage()
+                                            finish()
                                         }
                                         .show()
                                 }
@@ -94,10 +97,10 @@ class RegisterActivity : AppCompatActivity() {
                                 .show()
                         }
                     }
+                    closeLoadingView()
                     txt_password1.text.clear()
                     txt_password2.text.clear()
                 }
-
         }
 
         txt_id.addTextChangedListener(object : TextWatcher {
@@ -106,10 +109,10 @@ class RegisterActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (txt_id.text.isEmpty()) setButtonDisable()
+                if (txt_id.text.isEmpty() || txt_password1.text.isEmpty() || txt_password2.text.isEmpty())
+                    setButtonDisable()
                 else setButtonEnable()
             }
-
         })
 
         // 외부 폰트를 적용했기 때문에 비밀번호 입력 시 폰트 변환이 필요함.
@@ -191,27 +194,28 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setButtonEnable() {
         btn_register.isEnabled = true
-        btn_register.setBackgroundColor(
-            ContextCompat.getColor(
-                applicationContext,
-                R.color.colorPrimary
-            )
-        )
+        btn_register.setBackgroundResource(R.drawable.button_ripple_effect)
     }
 
     private fun setButtonDisable() {
         btn_register.isEnabled = false
-        btn_register.setBackgroundColor(
-            ContextCompat.getColor(
-                applicationContext,
-                R.color.colorDisableButton
-            )
-        )
+        btn_register.setBackgroundResource(R.drawable.button_disabled)
     }
 
-    private fun gotoLoginPage() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
+    private fun showLoadingView() {
+        progressLayout.visibility = View.VISIBLE
+        btn_cancel.isClickable = false
+        btn_register.isClickable = false
+        txt_id.isEnabled = false
+        txt_password1.isEnabled = false
+        txt_password2.isEnabled = false
+    }
+    private fun closeLoadingView() {
+        progressLayout.visibility = View.GONE
+        btn_cancel.isClickable = true
+        btn_register.isClickable = true
+        txt_id.isEnabled = true
+        txt_password1.isEnabled = true
+        txt_password2.isEnabled = true
     }
 }

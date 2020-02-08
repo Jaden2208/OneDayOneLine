@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
@@ -36,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         // 로그인 버튼 클릭
         btn_login.setOnClickListener {
+            showLoadingView()
             val userId = txt_id.text.toString()
             val userPassword = txt_password.text.toString()
             val userSessionManager = UserSessionManager(applicationContext)
@@ -48,12 +50,12 @@ class LoginActivity : AppCompatActivity() {
             when {
                 userId == "" -> {
                     builder.setMessage("아이디를 입력해주세요.")
-                        .setPositiveButton("확인") { _, _ -> }
+                        .setPositiveButton("확인") { _, _ -> closeLoadingView() }
                         .show()
                 }
                 userPassword == "" -> {
                     builder.setMessage("비밀번호를 입력해주세요.")
-                        .setPositiveButton("확인") { _, _ -> }
+                        .setPositiveButton("확인") { _, _ -> closeLoadingView() }
                         .show()
                 }
                 else -> {
@@ -99,6 +101,7 @@ class LoginActivity : AppCompatActivity() {
                                     txt_password.text.clear()
                                 }
                                 .show()
+                            closeLoadingView()
                         }
                 }
             }
@@ -127,5 +130,18 @@ class LoginActivity : AppCompatActivity() {
                     )
             }
         })
+    }
+
+    private fun showLoadingView() {
+        progressLayout.visibility = View.VISIBLE
+        btn_register.isClickable = false
+        txt_id.isEnabled = false
+        txt_password.isEnabled = false
+    }
+    private fun closeLoadingView() {
+        progressLayout.visibility = View.GONE
+        btn_register.isClickable = true
+        txt_id.isEnabled = true
+        txt_password.isEnabled = true
     }
 }

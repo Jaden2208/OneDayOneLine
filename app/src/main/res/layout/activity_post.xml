@@ -174,7 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimaryDark"
+            android:background="@drawable/button_ripple_effect"
             android:fontFamily="@font/cafe24_oneprettynight"
             android:text="올리기"
             android:textColor="#ffffff"
@@ -192,9 +192,8 @@
                 android:id="@+id/progressbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
-                android:progressBackgroundTint="#FFFFFF"
                 android:progressTint="@color/colorPrimaryLight"
+                android:indeterminateTint="@color/colorPrimaryDark"
                 android:layout_gravity="center"
                 android:layout_margin="30dp"/>
 

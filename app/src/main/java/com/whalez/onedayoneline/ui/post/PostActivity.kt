@@ -218,9 +218,9 @@ class PostActivity : AppCompatActivity(), PrimeDatePickerBottomSheet.OnDayPicked
                         Log.d(TAG, "파일 업로드 실패: ${it.message}")
                     }.addOnSuccessListener {
                         Log.d(TAG, "파일 업로드 성공")
-                    }.addOnProgressListener {
-                        val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
-                        progressbar.progress = progress.toInt()
+//                    }.addOnProgressListener {
+//                        val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
+//                        progressbar.progress = progress.toInt()
                     }.continueWithTask<Uri> { task ->
                         if (!task.isSuccessful) {
                             throw task.exception!!

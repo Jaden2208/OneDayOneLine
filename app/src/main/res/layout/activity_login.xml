@@ -1,115 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.auth.LoginActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:text="하루, 한 줄"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="40sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:text="오늘 당신의 하루는 어땠나요?"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.auth.LoginActivity">
 
-        <EditText
-            android:id="@+id/txt_id"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:background="@color/colorPrimaryLight"
-            android:drawableStart="@drawable/ic_person_white_24dp"
-            android:ems="10"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:hint="아이디"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <EditText
-            android:id="@+id/txt_password"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryLight"
-            android:drawableStart="@drawable/ic_lock_white_24dp"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:hint="비밀번호"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="하루, 한 줄"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:text="로그인"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="오늘 당신의 하루는 어땠나요?"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/btn_register"
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/txt_id"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:background="@color/colorPrimaryLight"
+                android:drawableStart="@drawable/ic_person_white_24dp"
+                android:ems="10"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:hint="이메일"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+
+            <EditText
+                android:id="@+id/txt_password"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimaryLight"
+                android:drawableStart="@drawable/ic_lock_white_24dp"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:hint="비밀번호"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_ripple_effect"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="로그인"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/cafe24_oneprettynight"
+                android:text="회원가입"
+                android:layout_marginTop="3dp"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/cafe24_oneprettynight"
-            android:text="회원가입"
-            android:textColor="@color/colorPrimaryLight"
-            android:textSize="18sp" />
+            android:visibility="gone" />
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+    <FrameLayout
+        android:id="@+id/progressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A0A0A0A0"
+        android:visibility="gone">
 
-</LinearLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/colorPrimaryDark"/>
+
+    </FrameLayout>
+
+</RelativeLayout>
